@@ -4,7 +4,7 @@ from cryptography.fernet import Fernet
 import bus_line_data as bus_line
 
 def dbconnect():
-    conn = pymysql.connect (host='127.0.0.1', user='root', password='1234', db='gbus_local', charset='utf8')
+    conn = pymysql.connect (host='bus-gps-system.ctawiea6yhnu.ap-northeast-2.rds.amazonaws.com', user='root', password='!es9830297', db='Bus_GPS_system', charset='utf8')
     return conn
 
 def save_key():
@@ -32,7 +32,7 @@ def insert_coordinate(conn, gps_id, x, y, gps_time):
     cur.execute(sql)
     result = cur.fetchall()[0][0]
     print(result)
-    insert_collect_history(conn, result, 'GPS', '은성트래시스(주)', gps_time)
+    insert_collect_history(conn, result, 'GPS', 'EunsungTrasys', gps_time)
     insert_usage_history(conn, result, 'GPS', 'APP', gps_time)
 
 def insert_access_history(conn, user_id, ip, access_time, name):
@@ -247,14 +247,14 @@ if __name__=="__main__" :
     
     conn = dbconnect()
     
-    # line = bus_line.line_23
-    # j = 0
-    # for i in line:
-    #     j += 1
-    #     time = datetime.now() + timedelta(seconds=j*20)
-    #     insert_coordinate(conn, "126853", i[0], i[1], time)
+    line = bus_line.line_23
+    j = 0
+    for i in line:
+        j += 1
+        time = datetime.now() + timedelta(seconds=j*20)
+        insert_coordinate(conn, "126853", i[0], i[1], time)
     
-    login_check(conn, "admin", "1234")
+    # login_check(conn, "admin", "!es9830297")
         
     # insert_coordinate(conn, "testgps", "35.184685", "126.870906", datetime(2024,1,23,11,11,11))
 
