@@ -26,7 +26,7 @@ def login():
     pw = data["pw"]
     check = db.login_check(conn, id, pw)
     if check:
-        return jsonify({"result": True})
+        return jsonify({"result": True, "msg": "계정이 확인되었습니다."})
     else:
         return jsonify({"result": False, "msg": "잘못된 계정입니다."}), 401
 
