@@ -247,18 +247,18 @@ if __name__=="__main__" :
     
     conn = dbconnect()
     
-    line = bus_line.line_23
-    j = 0
-    for i in line:
-        j += 1
-        time = datetime.now() + timedelta(seconds=j*20)
-        insert_coordinate(conn, "126853", i[0], i[1], time)
+    # line = bus_line.line_23
+    # j = 0
+    # for i in line:
+    #     j += 1
+    #     time = datetime.now() + timedelta(seconds=j*20)
+    #     insert_coordinate(conn, "126853", i[0], i[1], time)
     
     # login_check(conn, "admin", "!es9830297")
         
     # insert_coordinate(conn, "testgps", "35.184685", "126.870906", datetime(2024,1,23,11,11,11))
 
-    # search_collect_history_date(conn, datetime(2024,11,20,11,11,11), datetime(2024,12,25,11,11,11))
+    search_collect_history_date(conn, datetime(2024,11,20,11,11,11), datetime(2024,12,31,11,11,11))
 
     # delete_old_data(conn)
 
