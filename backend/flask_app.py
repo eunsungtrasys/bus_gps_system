@@ -4,8 +4,10 @@ from datetime import datetime, timedelta, date
 import maria_db as db
 from flask_jwt_extended import JWTManager, jwt_required, create_access_token, get_jwt_identity, unset_jwt_cookies
 import onetimepass as otp
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 
 app.config.update(
     DEBUG = True,
