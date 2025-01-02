@@ -41,25 +41,13 @@ def otp_login():
     secret_key = 'TRASYSABCDEFGHIJKLMNOPQRSTUVWXYZ'
     check = otp.valid_totp(pw, secret_key)
     if check:
-        user_name = db.search_user_name(id)
+        user_data = db.search_user(conn, id)
         client_ip = request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
-        db.insert_access_history(conn, id, client_ip, datetime.now(), user_name)
+        db.insert_access_history(conn, user_data[0][0], client_ip, datetime.now(), user_data[0][3])
         token = create_access_token(identity=id)
         return jsonify({"result": True, "access_token": token})
     else:
         return jsonify({"result": False, "msg": "잘못된 번호입니다."}), 401
-
-# @app.route("/coordinate", methods = ["GET"])
-# @jwt_required()
-# def coordinate():
-#     conn = db.dbconnect()
-#     data = request.args
-#     first_date = datetime.strptime(data["first"], "%Y-%m-%d")
-#     last_date = datetime.strptime(data["last"], "%Y-%m-%d")
-#     print("first_date: ", first_date)
-#     print("last_date: ", last_date)
-#     history = db.search_coordinate_date(conn, first_date, last_date)
-#     return jsonify({"result": history})
 
 @app.route("/access", methods = ["GET"])
 @jwt_required()
@@ -99,5 +87,6 @@ def usage_history():
 
 
 if __name__ == "__main__":
-    app.run('0.0.0.0', port=5000, debug=True)
+    app.run()
+    # app.run('0.0.0.0', port=5000, debug=True)
     

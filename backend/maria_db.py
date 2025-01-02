@@ -16,7 +16,6 @@ def save_key():
 def load_key():
     with open("encryption_key.key", "rb") as key_file:
         key = key_file.read()
-    print(key)
     return key
 
 def insert_coordinate(conn, gps_id, x, y, gps_time):
@@ -27,11 +26,9 @@ def insert_coordinate(conn, gps_id, x, y, gps_time):
     datas = (suite.encrypt(gps_id.encode()), suite.encrypt(x.encode()), suite.encrypt(y.encode()), gps_time)
     cur.execute(sql, datas)
     conn.commit()
-    print("좌표값 입력됨")
     sql = "SELECT coordinate_id FROM Coordinate ORDER BY coordinate_id DESC LIMIT 1"
     cur.execute(sql)
     result = cur.fetchall()[0][0]
-    print(result)
     insert_collect_history(conn, result, 'GPS', 'EunsungTrasys', gps_time)
     insert_usage_history(conn, result, 'GPS', 'APP', gps_time)
 
@@ -84,7 +81,6 @@ def search_access_history(conn):
         results.append(dict(zip(i, j)))
     for i in results:
         i['access_time'] = i['access_time'].strftime("%Y-%m-%d %H:%M:%S")
-    print(results)
     return results
 
 def search_access_history_date(conn, first_date:datetime, last_date:datetime):
@@ -104,7 +100,6 @@ def search_access_history_date(conn, first_date:datetime, last_date:datetime):
     results = list(filter(check, results))
     for i in results:
         i['access_time'] = i['access_time'].strftime("%Y-%m-%d %H:%M:%S")
-    print(results)
     return results
 
 def search_coordinate(conn):
@@ -126,7 +121,6 @@ def search_coordinate(conn):
         i['x'] = suite.decrypt(i['x']).decode()
         i['y'] = suite.decrypt(i['y']).decode()
         i['time'] = i['time'].strftime("%Y-%m-%d %H:%M:%S")
-    print(results)
     return results
 
 def search_coordinate_date(conn, first_date:datetime, last_date:datetime):
@@ -152,7 +146,6 @@ def search_coordinate_date(conn, first_date:datetime, last_date:datetime):
     results = list(filter(check, results))
     for i in results:
         i['time'] = i['time'].strftime("%Y-%m-%d %H:%M:%S")
-    print(results)
     return results
 
 def search_collect_history(conn):
@@ -169,7 +162,6 @@ def search_collect_history(conn):
         results.append(dict(zip(i, j)))
     for i in results:
         i['collect_time'] = i['collect_time'].strftime("%Y-%m-%d %H:%M:%S")
-    print(results)
     return results
 
 def search_collect_history_date(conn, first_date:datetime, last_date:datetime):
@@ -189,7 +181,6 @@ def search_collect_history_date(conn, first_date:datetime, last_date:datetime):
     results = list(filter(check, results))
     for i in results:
         i['collect_time'] = i['collect_time'].strftime("%Y-%m-%d %H:%M:%S")
-    print(results)
     return results
 
 def search_usage_history(conn):
@@ -206,7 +197,6 @@ def search_usage_history(conn):
         results.append(dict(zip(i, j)))
     for i in results:
         i['usage_time'] = i['usage_time'].strftime("%Y-%m-%d %H:%M:%S")
-    print(results)
     return results
 
 def search_usage_history_date(conn, first_date:datetime, last_date:datetime):
@@ -226,7 +216,6 @@ def search_usage_history_date(conn, first_date:datetime, last_date:datetime):
     results = list(filter(check, results))
     for i in results:
         i['usage_time'] = i['usage_time'].strftime("%Y-%m-%d %H:%M:%S")
-    print(results)
     return results
 
 def login_check(conn, id, pw):
@@ -238,9 +227,15 @@ def login_check(conn, id, pw):
         result = True
     else:
         result = False
-    print(result)
     return result
     
+def search_user(conn, id):
+    cur = conn.cursor()
+    sql = "SELECT * FROM User WHERE id=%s"
+    cur.execute(sql, (id))
+    data = cur.fetchall()
+    print(data)
+    return data
     
 
 if __name__=="__main__" :
@@ -258,7 +253,11 @@ if __name__=="__main__" :
         
     # insert_coordinate(conn, "testgps", "35.184685", "126.870906", datetime(2024,1,23,11,11,11))
 
-    search_collect_history_date(conn, datetime(2024,11,20,11,11,11), datetime(2024,12,31,11,11,11))
+    # search_collect_history_date(conn, datetime(2024,11,20,11,11,11), datetime(2024,12,31,11,11,11))
+
+    # search_user_name(conn, "admin")
+    
+    insert_access_history(conn, 1, "1234", datetime(2025,1,2,11,11,11), "cjs")
 
     # delete_old_data(conn)
 
