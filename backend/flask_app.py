@@ -55,11 +55,8 @@ def otp_login():
 @jwt_required()
 def access_history():
     conn = db.dbconnect()
-    data = request.args
-    first_date = datetime.strptime(data["first"], "%Y-%m-%d")
-    last_date = datetime.strptime(data["last"], "%Y-%m-%d")
-    print("first_date: ", first_date)
-    print("last_date: ", last_date)
+    first_date = datetime.strptime(request.args.get("first", str(date.today())), "%Y-%m-%d")
+    last_date = datetime.strptime(request.args.get("last", str(date.today()+timedelta(days=1))), "%Y-%m-%d")
     history = db.search_access_history_date(conn, first_date, last_date)
     return jsonify({"result": history})
 
@@ -67,11 +64,8 @@ def access_history():
 @jwt_required()
 def collect_history():
     conn = db.dbconnect()
-    data = request.args
-    first_date = datetime.strptime(data["first"], "%Y-%m-%d")
-    last_date = datetime.strptime(data["last"], "%Y-%m-%d")
-    print("first_date: ", first_date)
-    print("last_date: ", last_date)
+    first_date = datetime.strptime(request.args.get("first", str(date.today())), "%Y-%m-%d")
+    last_date = datetime.strptime(request.args.get("last", str(date.today()+timedelta(days=1))), "%Y-%m-%d")
     history = db.search_collect_history_date(conn, first_date, last_date)
     return jsonify({"result": history})
 
@@ -79,16 +73,13 @@ def collect_history():
 @jwt_required()
 def usage_history():
     conn = db.dbconnect()
-    data = request.args
-    first_date = datetime.strptime(data["first"], "%Y-%m-%d")
-    last_date = datetime.strptime(data["last"], "%Y-%m-%d")
-    print("first_date: ", first_date)
-    print("last_date: ", last_date)
+    first_date = datetime.strptime(request.args.get("first", str(date.today())), "%Y-%m-%d")
+    last_date = datetime.strptime(request.args.get("last", str(date.today()+timedelta(days=1))), "%Y-%m-%d")
     history = db.search_usage_history_date(conn, first_date, last_date)
     return jsonify({"result": history})
 
 
 if __name__ == "__main__":
-    # app.run()
-    app.run('0.0.0.0', port=5000, debug=True)
+    app.run()
+    # app.run('0.0.0.0', port=5000, debug=True)
     

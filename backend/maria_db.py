@@ -81,6 +81,7 @@ def search_access_history(conn):
         results.append(dict(zip(i, j)))
     for i in results:
         i['access_time'] = i['access_time'].strftime("%Y-%m-%d %H:%M:%S")
+    print(results)
     return results
 
 def search_access_history_date(conn, first_date:datetime, last_date:datetime):
@@ -162,6 +163,7 @@ def search_collect_history(conn):
         results.append(dict(zip(i, j)))
     for i in results:
         i['collect_time'] = i['collect_time'].strftime("%Y-%m-%d %H:%M:%S")
+    print(results)
     return results
 
 def search_collect_history_date(conn, first_date:datetime, last_date:datetime):
@@ -197,6 +199,7 @@ def search_usage_history(conn):
         results.append(dict(zip(i, j)))
     for i in results:
         i['usage_time'] = i['usage_time'].strftime("%Y-%m-%d %H:%M:%S")
+    print(results)
     return results
 
 def search_usage_history_date(conn, first_date:datetime, last_date:datetime):
@@ -234,7 +237,6 @@ def search_user(conn, id):
     sql = "SELECT * FROM User WHERE id=%s"
     cur.execute(sql, (id))
     data = cur.fetchall()
-    print(data)
     return data
     
 
@@ -242,12 +244,25 @@ if __name__=="__main__" :
     
     conn = dbconnect()
     
-    # line = bus_line.line_23
-    # j = 0
-    # for i in line:
-    #     j += 1
-    #     time = datetime.now() + timedelta(seconds=j*20)
-    #     insert_coordinate(conn, "126853", i[0], i[1], time)
+    while(True):
+        word = input()
+        match word:
+            case "input coordinate now":
+                line = bus_line.line_23
+                j = 0
+                time = datetime.now()
+                for i in line:
+                    j += 1
+                    time += timedelta(seconds=j*20)
+                    insert_coordinate(conn, "126853", i[0], i[1], time)
+            case "search access":
+                search_access_history(conn)
+            case "search collect":
+                search_collect_history(conn)
+            case "search usage":
+                search_usage_history(conn)
+            case "end":
+                break
     
     # login_check(conn, "admin", "!es9830297")
         
@@ -257,8 +272,6 @@ if __name__=="__main__" :
 
     # search_user_name(conn, "admin")
     
-    insert_access_history(conn, 1, "1234", datetime(2025,1,2,11,11,11), "cjs")
+    # insert_access_history(conn, 1, "1234", datetime(2025,1,2,11,11,11), "cjs")
 
     # delete_old_data(conn)
-
-    # insert_access_history(conn, 1, "176.352.245.654", datetime(2024,5,23,11,11,11), "cjs")
