@@ -100,7 +100,7 @@ def search_access_history_date(conn, first_date:datetime, last_date:datetime):
     for i,j in zip(tuple(column_names_list), datas):
         results.append(dict(zip(i, j)))
     def check(data):
-        return (data["access_time"] >= first_date and data["access_time"] <= last_date)
+        return (data["access_time"] >= first_date and data["access_time"] <= last_date + timedelta(days=1))
     results = list(filter(check, results))
     for i in results:
         i['access_time'] = i['access_time'].strftime("%Y-%m-%d %H:%M:%S")
@@ -148,7 +148,7 @@ def search_coordinate_date(conn, first_date:datetime, last_date:datetime):
         i['x'] = suite.decrypt(i['x']).decode()
         i['y'] = suite.decrypt(i['y']).decode()
     def check(data):
-        return (data["time"] >= first_date & data["time"] <= last_date)
+        return (data["time"] >= first_date & data["time"] <= last_date + timedelta(days=1))
     results = list(filter(check, results))
     for i in results:
         i['time'] = i['time'].strftime("%Y-%m-%d %H:%M:%S")
@@ -185,7 +185,7 @@ def search_collect_history_date(conn, first_date:datetime, last_date:datetime):
     for i,j in zip(tuple(column_names_list), datas):
         results.append(dict(zip(i, j)))
     def check(data):
-        return (data["collect_time"] >= first_date and data["collect_time"] <= last_date)
+        return (data["collect_time"] >= first_date and data["collect_time"] <= last_date + timedelta(days=1))
     results = list(filter(check, results))
     for i in results:
         i['collect_time'] = i['collect_time'].strftime("%Y-%m-%d %H:%M:%S")
@@ -222,7 +222,7 @@ def search_usage_history_date(conn, first_date:datetime, last_date:datetime):
     for i,j in zip(tuple(column_names_list), datas):
         results.append(dict(zip(i, j)))
     def check(data):
-        return (data["usage_time"] >= first_date and data["usage_time"] <= last_date)
+        return (data["usage_time"] >= first_date and data["usage_time"] <= last_date + timedelta(days=1))
     results = list(filter(check, results))
     for i in results:
         i['usage_time'] = i['usage_time'].strftime("%Y-%m-%d %H:%M:%S")
