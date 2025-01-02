@@ -41,6 +41,9 @@ def otp_login():
     secret_key = 'TRASYSABCDEFGHIJKLMNOPQRSTUVWXYZ'
     check = otp.valid_totp(pw, secret_key)
     if check:
+        user_name = db.search_user_name(id)
+        client_ip = request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
+        db.insert_access_history(conn, id, client_ip, datetime.now(), user_name)
         token = create_access_token(identity=id)
         return jsonify({"result": True, "access_token": token})
     else:
