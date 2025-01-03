@@ -38,7 +38,7 @@ login_input = login_ns.model('login_input', {
 class login(Resource):
     def post(self):
         if not request.is_json:
-            return jsonify({"msg": "Missing JSON in request"})
+            return jsonify({"msg": "Missing JSON in request"}), 400
         conn = db.dbconnect()
         data = request.get_json()
         id = data["id"]
@@ -47,7 +47,7 @@ class login(Resource):
         if check:
             return jsonify({"result": True, "msg": "계정이 확인되었습니다."})
         else:
-            return jsonify({"result": False, "msg": "잘못된 계정입니다."})
+            return jsonify({"result": False, "msg": "잘못된 계정입니다."}), 401
 
 
 otp_ns = api.namespace(name='otp', description='OTP 2차인증')
@@ -59,7 +59,7 @@ otp_input = otp_ns.model('otp_input', {
 class otp_login(Resource):
     def post(self):
         if not request.is_json:
-            return jsonify({"msg": "Missing JSON in request"})
+            return jsonify({"msg": "Missing JSON in request"}), 400
         conn = db.dbconnect()
         data = request.get_json()
         id = data["id"]
@@ -73,7 +73,7 @@ class otp_login(Resource):
             token = create_access_token(identity=id)
             return jsonify({"result": True, "access_token": token})
         else:
-            return jsonify({"result": False, "msg": "잘못된 번호입니다."})
+            return jsonify({"result": False, "msg": "잘못된 번호입니다."}), 401
 
 
 access_ns = api.namespace(name='access', description='접속기록 조회')

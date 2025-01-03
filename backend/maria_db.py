@@ -85,7 +85,7 @@ def search_access_history(conn):
     return results
 
 def search_access_history_date(conn, first_date:datetime, last_date:datetime):
-    sql = "SELECT * FROM AccessHistory ORDER BY access_time DESC"
+    sql = "SELECT ah.access_history_id, u.id AS user_id_in_user_table, ah.ip, ah.access_time, ah.name AS access_name FROM AccessHistory ah JOIN User u ON ah.user_id = u.user_id ORDER BY access_time DESC"
     cur = conn.cursor()
     cur.execute(sql)
     datas = cur.fetchall()
