@@ -249,12 +249,11 @@ if __name__=="__main__" :
         match word:
             case "input coordinate now":
                 line = bus_line.line_23
-                j = 0
                 time = datetime.now()
                 for i in line:
-                    j += 1
-                    time += timedelta(seconds=j*20)
-                    insert_coordinate(conn, "126853", i[0], i[1], time)
+                    time += timedelta(seconds=20)
+                    insert_coordinate(conn, "135648", i[0], i[1], time)
+                print("input complete")
             case "search access":
                 search_access_history(conn)
             case "search collect":
