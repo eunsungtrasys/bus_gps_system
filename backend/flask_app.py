@@ -33,7 +33,7 @@ login_ns = api.namespace(name='login', description='ID/PW 1차인증')
 login_input = login_ns.model('login_input', {
     'id': fields.String(description='id', required=True, example='admin'),
     'pw': fields.String(description='pw', required=True, example='!es9830297')})
-@login_ns.route('/')
+@login_ns.route('')
 @login_ns.expect(login_input)
 class login(Resource):
     def post(self):
@@ -54,7 +54,7 @@ otp_ns = api.namespace(name='otp', description='OTP 2차인증')
 otp_input = otp_ns.model('otp_input', {
     'id': fields.String(description='id', required=True, example='admin'),
     'otp_pw': fields.String(description='otp_pw', required=True, example='123456')})
-@otp_ns.route('/')
+@otp_ns.route('')
 @otp_ns.expect(otp_input)
 class otp_login(Resource):
     def post(self):
@@ -80,7 +80,7 @@ access_ns = api.namespace(name='access', description='접속기록 조회')
 access_input = reqparse.RequestParser()
 access_input.add_argument('first', type=str, default=str(date.today()), help='시작일')
 access_input.add_argument('last', type=str, default=str(date.today()+timedelta(days=1)), help='끝일')
-@access_ns.route("/")
+@access_ns.route("")
 @access_ns.expect(access_input)
 class access_history(Resource):
     @jwt_required()
@@ -96,7 +96,7 @@ collect_ns = api.namespace(name='collect', description='위치정보 수집사�
 collect_input = reqparse.RequestParser()
 collect_input.add_argument('first', type=str, default=str(date.today()), help='시작일')
 collect_input.add_argument('last', type=str, default=str(date.today()+timedelta(days=1)), help='끝일')
-@collect_ns.route("/")
+@collect_ns.route("")
 @collect_ns.expect(collect_input)
 class collect_history(Resource):
     @jwt_required()
@@ -112,7 +112,7 @@ usage_ns = api.namespace(name='usage', description='위치정보 이용제공사
 usage_input = reqparse.RequestParser()
 usage_input.add_argument('first', type=str, default=str(date.today()), help='시작일')
 usage_input.add_argument('last', type=str, default=str(date.today()+timedelta(days=1)), help='끝일')
-@usage_ns.route("/")
+@usage_ns.route("")
 @usage_ns.expect(usage_input)
 class usage_history(Resource):
     @jwt_required()
