@@ -2,10 +2,15 @@ from flask import Flask, request, render_template, jsonify
 from markupsafe import escape
 from datetime import datetime, timedelta, date
 import maria_db as db
-from flask_jwt_extended import JWTManager, jwt_required, create_access_token, get_jwt_identity, unset_jwt_cookies
+from mariadb import *
+from flask_jwt_extended import *
+from flask_jwt_extended.exceptions import *
 import onetimepass as otp
 from flask_cors import CORS
 from flask_restx import Api, Resource, Namespace, fields, reqparse
+from flask_request_validator import *
+from flask_request_validator.exceptions import * 
+from werkzeug.exceptions import *
 
 app = Flask(__name__)
 
@@ -36,18 +41,22 @@ login_input = login_ns.model('login_input', {
 @login_ns.route('')
 @login_ns.expect(login_input)
 class login(Resource):
-    def post(self):
+    @validate_params(
+        Param('id', JSON, str),
+        Param('pw', JSON, str)
+    )
+    def post(self, valid: ValidRequest):
         if not request.is_json:
-            return jsonify({"msg": "Missing JSON in request"}), 400
+            return jsonify({"msg": "Missing JSON in request"})
         conn = db.dbconnect()
-        data = request.get_json()
+        data = valid.get_json()
         id = data["id"]
         pw = data["pw"]
         check = db.login_check(conn, id, pw)
         if check:
             return jsonify({"result": True, "msg": "계정이 확인되었습니다."})
         else:
-            return jsonify({"result": False, "msg": "잘못된 계정입니다."}), 401
+            return jsonify({"result": False, "msg": "잘못된 계정입니다."})
 
 
 otp_ns = api.namespace(name='otp', description='OTP 2차인증')
@@ -57,11 +66,15 @@ otp_input = otp_ns.model('otp_input', {
 @otp_ns.route('')
 @otp_ns.expect(otp_input)
 class otp_login(Resource):
-    def post(self):
+    @validate_params(
+        Param('id', JSON, str),
+        Param('otp_pw', JSON, str)
+    )
+    def post(self, valid:ValidRequest):
         if not request.is_json:
-            return jsonify({"msg": "Missing JSON in request"}), 400
+            return jsonify({"msg": "Missing JSON in request"})
         conn = db.dbconnect()
-        data = request.get_json()
+        data = valid.get_json()
         id = data["id"]
         pw = data["otp_pw"]
         secret_key = 'TRASYSABCDEFGHIJKLMNOPQRSTUVWXYZ'
@@ -73,7 +86,7 @@ class otp_login(Resource):
             token = create_access_token(identity=id)
             return jsonify({"result": True, "access_token": token})
         else:
-            return jsonify({"result": False, "msg": "잘못된 번호입니다."}), 401
+            return jsonify({"result": False, "msg": "잘못된 번호입니다."})
 
 
 access_ns = api.namespace(name='access', description='접속기록 조회')
@@ -84,7 +97,11 @@ access_input.add_argument('last', type=str, default=str(date.today()+timedelta(d
 @access_ns.expect(access_input)
 class access_history(Resource):
     @jwt_required()
-    def get(self):
+    @validate_params(
+        Param('first', GET, str, rules=[Datetime('%Y-%m-%d')]),
+        Param('last', GET, str, rules=[Datetime('%Y-%m-%d')]),
+    )
+    def get(self, *args):
         conn = db.dbconnect()
         first_date = datetime.strptime(request.args.get("first", str(date.today())), "%Y-%m-%d")
         last_date = datetime.strptime(request.args.get("last", str(date.today()+timedelta(days=1))), "%Y-%m-%d")
@@ -100,7 +117,11 @@ collect_input.add_argument('last', type=str, default=str(date.today()+timedelta(
 @collect_ns.expect(collect_input)
 class collect_history(Resource):
     @jwt_required()
-    def get(self):
+    @validate_params(
+        Param('first', GET, str, rules=[Datetime('%Y-%m-%d')]),
+        Param('last', GET, str, rules=[Datetime('%Y-%m-%d')]),
+    )
+    def get(self, *args):
         conn = db.dbconnect()
         first_date = datetime.strptime(request.args.get("first", str(date.today())), "%Y-%m-%d")
         last_date = datetime.strptime(request.args.get("last", str(date.today()+timedelta(days=1))), "%Y-%m-%d")
@@ -116,7 +137,11 @@ usage_input.add_argument('last', type=str, default=str(date.today()+timedelta(da
 @usage_ns.expect(usage_input)
 class usage_history(Resource):
     @jwt_required()
-    def get(self):
+    @validate_params(
+        Param('first', GET, str, rules=[Datetime('%Y-%m-%d')]),
+        Param('last', GET, str, rules=[Datetime('%Y-%m-%d')]),
+    )
+    def get(self, *args):
         conn = db.dbconnect()
         first_date = datetime.strptime(request.args.get("first", str(date.today())), "%Y-%m-%d")
         last_date = datetime.strptime(request.args.get("last", str(date.today()+timedelta(days=1))), "%Y-%m-%d")
@@ -124,7 +149,136 @@ class usage_history(Resource):
         return jsonify({"result": history})
 
 
+
+@app.errorhandler(HTTPException)
+def handle_http_exception(e):
+    response = e.get_response()
+    response.data = jsonify({
+        "code": e.code,
+        "name": e.name,
+        "description": e.description
+    }).get_data(as_text=True)
+    response.content_type = "application/json"
+    return response, e.code
+
+@app.errorhandler(Exception)
+def handle_generic_exception(e):
+    return jsonify({
+        "code": 500,
+        "name": "Internal Server Error",
+        "description": str(e)
+    }), 500
+
+@app.errorhandler(RequestError)
+def handle_validation_exception(e):
+    return jsonify({
+        "code": 400,
+        "name": "Validation Error",
+        "description": str(e)
+    }), 400
+
+@app.errorhandler(NoAuthorizationError)
+def handle_no_auth_error(e):
+    return jsonify({
+        "code": 401,
+        "name": "Authorization Error",
+        "description": "Authorization token is missing or invalid."
+    }), 401
+
+@app.errorhandler(JWTDecodeError)
+def handle_jwt_decode_error(e):
+    return jsonify({
+        "code": 401,
+        "name": "JWT Decode Error",
+        "description": "The token is invalid or malformed."
+    }), 401
+
+@app.errorhandler(RevokedTokenError)
+def handle_revoked_token_error(e):
+    return jsonify({
+        "code": 401,
+        "name": "Revoked Token",
+        "description": "This token has been revoked and cannot be used."
+    }), 401
+
+@app.errorhandler(FreshTokenRequired)
+def handle_fresh_token_required(e):
+    return jsonify({
+        "code": 401,
+        "name": "Fresh Token Required",
+        "description": "A fresh token is required to access this resource."
+    }), 401
+    
+@app.errorhandler(DatabaseError)
+def handle_database_error(e):
+    return jsonify({
+        "code": 500,
+        "name": "Database Error",
+        "description": "An error occurred while accessing the database. Please try again later."
+    }), 500
+
+@app.errorhandler(ValueError)
+def handle_value_error(e):
+    description = str(e)
+    if "OTP" in description:
+        name = "OTP Validation Error"
+        message = "Invalid OTP code provided. Please try again."
+    elif "date" in description:
+        name = "Date Format Error"
+        message = "The provided date format is invalid."
+    else:
+        name = "Value Error"
+        message = description
+
+    return jsonify({
+        "code": 400,
+        "name": name,
+        "description": message
+    }), 400
+
+@app.errorhandler(400)
+def handle_bad_request(e):
+    return jsonify({
+        "code": 400,
+        "name": "Bad Request",
+        "description": "The request is invalid or missing required parameters."
+    }), 400
+
+@app.errorhandler(401)
+def handle_unauthorized_error(e):
+    return jsonify({
+        "code": 401,
+        "name": "Unauthorized",
+        "description": "The ID or password is incorrect."
+    }), 401
+    
+@app.errorhandler(403)
+def handle_cors_error(e):
+    return jsonify({
+        "code": 403,
+        "name": "CORS Error",
+        "description": "Cross-Origin Request Blocked. Check your CORS configuration."
+    }), 403
+
+@app.errorhandler(404)
+def handle_not_found(e):
+    return jsonify({
+        "code": 404,
+        "name": "Not Found",
+        "description": "The requested resource was not found on this server."
+    }), 404
+
+@app.errorhandler(500)
+def handle_internal_server_error(e):
+    return jsonify({
+        "code": 500,
+        "name": "Internal Server Error",
+        "description": "An unexpected error occurred. Please try again later."
+    }), 500
+
+
+
 if __name__ == "__main__":
-    # app.run()
-    app.run('0.0.0.0', port=5000, debug=True)
+    app.run('0.0.0.0', port=3000, debug=True)
+    # app.run('0.0.0.0', port=5000, debug=True)
     
