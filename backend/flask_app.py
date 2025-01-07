@@ -97,14 +97,15 @@ access_input.add_argument('last', type=str, default=str(date.today()+timedelta(d
 @access_ns.expect(access_input)
 class access_history(Resource):
     @jwt_required()
-    @validate_params(
-        Param('first', GET, str, rules=[Datetime('%Y-%m-%d')]),
-        Param('last', GET, str, rules=[Datetime('%Y-%m-%d')]),
-    )
-    def get(self, *args):
+    def get(self):
         conn = db.dbconnect()
-        first_date = datetime.strptime(request.args.get("first", str(date.today())), "%Y-%m-%d")
-        last_date = datetime.strptime(request.args.get("last", str(date.today()+timedelta(days=1))), "%Y-%m-%d")
+        
+        first_date_str = request.args.get("first", str(date.today()))
+        last_date_str = request.args.get("last", str(date.today() + timedelta(days=1)))
+        
+        first_date = datetime.strptime(first_date_str, "%Y-%m-%d")
+        last_date = datetime.strptime(last_date_str, "%Y-%m-%d")
+
         history = db.search_access_history_date(conn, first_date, last_date)
         return jsonify({"result": history})
 
@@ -117,14 +118,15 @@ collect_input.add_argument('last', type=str, default=str(date.today()+timedelta(
 @collect_ns.expect(collect_input)
 class collect_history(Resource):
     @jwt_required()
-    @validate_params(
-        Param('first', GET, str, rules=[Datetime('%Y-%m-%d')]),
-        Param('last', GET, str, rules=[Datetime('%Y-%m-%d')]),
-    )
-    def get(self, *args):
+    def get(self):
         conn = db.dbconnect()
-        first_date = datetime.strptime(request.args.get("first", str(date.today())), "%Y-%m-%d")
-        last_date = datetime.strptime(request.args.get("last", str(date.today()+timedelta(days=1))), "%Y-%m-%d")
+        
+        first_date_str = request.args.get("first", str(date.today()))
+        last_date_str = request.args.get("last", str(date.today() + timedelta(days=1)))
+        
+        first_date = datetime.strptime(first_date_str, "%Y-%m-%d")
+        last_date = datetime.strptime(last_date_str, "%Y-%m-%d")
+
         history = db.search_collect_history_date(conn, first_date, last_date)
         return jsonify({"result": history})
 
@@ -137,14 +139,15 @@ usage_input.add_argument('last', type=str, default=str(date.today()+timedelta(da
 @usage_ns.expect(usage_input)
 class usage_history(Resource):
     @jwt_required()
-    @validate_params(
-        Param('first', GET, str, rules=[Datetime('%Y-%m-%d')]),
-        Param('last', GET, str, rules=[Datetime('%Y-%m-%d')]),
-    )
-    def get(self, *args):
+    def get(self):
         conn = db.dbconnect()
-        first_date = datetime.strptime(request.args.get("first", str(date.today())), "%Y-%m-%d")
-        last_date = datetime.strptime(request.args.get("last", str(date.today()+timedelta(days=1))), "%Y-%m-%d")
+        
+        first_date_str = request.args.get("first", str(date.today()))
+        last_date_str = request.args.get("last", str(date.today() + timedelta(days=1)))
+        
+        first_date = datetime.strptime(first_date_str, "%Y-%m-%d")
+        last_date = datetime.strptime(last_date_str, "%Y-%m-%d")
+
         history = db.search_usage_history_date(conn, first_date, last_date)
         return jsonify({"result": history})
 
@@ -279,6 +282,5 @@ def handle_internal_server_error(e):
 
 
 if __name__ == "__main__":
-    # app.run('0.0.0.0', port=3000, debug=True)
     app.run('0.0.0.0', port=4000, debug=True)
     
