@@ -1,0 +1,29 @@
+.container {
+  display: flex;
+  flex-direction: row;
+  height: 100vh;
+}
+
+.sidebar {
+  flex: display;
+  flex-direction: column;
+  width: 300px;
+  color: rgba(134, 142, 152, 1);
+  margin-left: 20px;
+  border-right: 2px solid rgba(230, 220, 230, 1);
+}
+
+.item {
+  margin-top: 20px;
+  font-size: 24px;
+  font-weight: 700;
+  gap: 20px;
+
+  &:hover {
+    color: rgba(0, 123, 255, 1);
+  }
+}
+
+.activeLink {
+  color: rgba(0, 123, 255, 1);
+}

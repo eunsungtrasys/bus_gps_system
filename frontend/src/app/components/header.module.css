@@ -1,0 +1,14 @@
+.container {
+  display: flex;
+  height: 100px;
+  color: black;
+  font-size: 32px;
+  font-weight: 700;
+  border-bottom: 2px solid rgba(230, 220, 230, 1);
+}
+
+.p {
+  display: flex;
+  margin-left: 100px;
+  align-items: center;
+}

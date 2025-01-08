@@ -1,0 +1,85 @@
+.container {
+  display: flex;
+  /* flex-direction: column; */
+  background-color: rgba(255, 255, 255, 1);
+  /* height: 700px; */
+  height: 100%;
+  /* width: calc(100% - 100px); */
+  width: 100%;
+  margin-top: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
+  /* background-color: white; */
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.p {
+  color: rgba(0, 0, 0, 1);
+  font-weight: bold;
+  font-size: 20px;
+  margin-bottom: 20px;
+}
+
+.tableContainer {
+  /* 테이블 원하는 높이로 설정 */
+  max-height: 666px;
+  /* 세로 스크롤 활성화 */
+  overflow-y: auto;
+  border-radius: 5px;
+  width: 100%;
+  /* 테두리 추가 */
+  border: 1px solid rgba(230, 230, 230, 1);
+  position: relative;
+}
+
+.table {
+  border-radius: 5px;
+  border-collapse: collapse;
+  width: 100%;
+  white-space: nowrap;
+  font-size: 16px;
+  color: black;
+  font-weight: 400;
+}
+
+.thead {
+  border-radius: 8px;
+  border-bottom: 2px solid rgba(202, 206, 211, 1);
+  background-color: rgba(229, 242, 253, 1);
+  position: sticky;
+  top: 0;
+  z-index: 1;
+
+  & > tr {
+    border-radius: 8px;
+  }
+}
+
+.tr {
+  cursor: pointer;
+  &:hover {
+    background-color: rgba(230, 230, 230, 0.5);
+  }
+}
+
+.th {
+  padding: 15px;
+  font-size: 16px;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.td {
+  text-align: center;
+  vertical-align: middle;
+  padding: 13px;
+  border-bottom: 1px solid rgba(230, 230, 230, 1);
+  font-size: 16px;
+  font-weight: 400;
+  white-space: nowrap;
+}
