@@ -56,7 +56,7 @@ class login(Resource):
         if check:
             return jsonify({"result": True, "msg": "계정이 확인되었습니다."})
         else:
-            return jsonify({"result": False, "msg": "잘못된 계정입니다."})
+            return jsonify({"result": False, "msg": "잘못된 계정입니다."}), 401
 
 
 otp_ns = api.namespace(name='otp', description='OTP 2차인증')
@@ -86,7 +86,7 @@ class otp_login(Resource):
             token = create_access_token(identity=id)
             return jsonify({"result": True, "access_token": token})
         else:
-            return jsonify({"result": False, "msg": "잘못된 번호입니다."})
+            return jsonify({"result": False, "msg": "잘못된 번호입니다."}), 401
 
 
 access_ns = api.namespace(name='access', description='접속기록 조회')
