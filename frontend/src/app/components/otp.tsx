@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+"use client";
+
+import React, { useState, useRef, useEffect } from "react";
 import { InputOtp } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 import { otp } from "@/utils";
@@ -7,6 +9,13 @@ import style from "@app/otp.module.css";
 export default function Otp() {
   const [value, setValue] = useState<string>("");
   const router = useRouter();
+  const ref = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (ref.current) {
+      ref.current.focus();
+    }
+  }, []);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -26,6 +35,7 @@ export default function Otp() {
         </div>
         <form onSubmit={submit}>
           <InputOtp
+            ref={ref}
             className={style.input}
             length={6}
             value={value}

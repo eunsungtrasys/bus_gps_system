@@ -1,11 +1,13 @@
 "use client";
 
-import style from "@collect/page.module.css";
 import { useEffect, useState } from "react";
+import style from "@collect/page.module.css";
 import type { AccessHistory } from "@/@types/gps";
 import Cookies from "js-cookie";
-import Table from "@/app/components/table";
 import { today } from "@/utils";
+import DateInput from "@/app/components/DateInput";
+import Button from "@/app/components/button";
+import Table from "@/app/components/table";
 
 export default function Page() {
   const [startDate, setStartDate] = useState<string>("");
@@ -22,10 +24,8 @@ export default function Page() {
     const { name, value } = e.target;
     if (name === "start") {
       setStartDate(value);
-      console.log(startDate);
     } else if (name === "last") {
       setLastDate(value);
-      console.log(lastDate);
     }
   };
 
@@ -80,23 +80,9 @@ export default function Page() {
         <div className={style.title}>위치정보 접근기록</div>
       </div>
       <form onSubmit={onSubmit} className={style.datePicker}>
-        <input
-          className={style.input}
-          type="date"
-          value={startDate}
-          name="start"
-          onChange={selectDates}
-        />
-        <input
-          className={style.input}
-          type="date"
-          value={lastDate}
-          name="last"
-          onChange={selectDates}
-        />
-        <button type="submit" className={style.button}>
-          검색
-        </button>
+        <DateInput value={startDate} name="start" onChange={selectDates} />
+        <DateInput value={lastDate} name="last" onChange={selectDates} />
+        <Button />
       </form>
       <Table datas={accessDatas} />
     </div>
