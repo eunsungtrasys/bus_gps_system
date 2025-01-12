@@ -13,11 +13,13 @@ export async function otp(otp_pw: string) {
   );
 
   if (!response.ok) {
+    if (response.status === 401 || response.status === 500) {
+      alert("OTP 비밀번호를 확인해주세요.");
+    }
     throw new Error("OTP시도 중 오류가 발생했습니다.");
   }
 
   const { access_token } = await response.json();
-  console.log("OTP access_token", access_token);
   Cookies.set("access_token", access_token);
 }
 

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, ChangeEvent } from "react";
+import React, { useState, ChangeEvent, useRef, useEffect } from "react";
 import { Button, Input } from "@nextui-org/react";
 import { Icon } from "@iconify/react";
 import Otp from "./components/otp";
@@ -17,6 +17,13 @@ export default function Login() {
   const [pw, setPw] = useState<string>("");
   // 2차 시도
   const [otp, setOtp] = useState<boolean>(false);
+  const ref = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (ref.current) {
+      ref.current.focus();
+    }
+  }, []);
 
   // Id, Pw 입력칸
   const onChangeEvent = (e: ChangeEvent<HTMLInputElement>) => {
@@ -42,6 +49,9 @@ export default function Login() {
     );
 
     if (!response.ok) {
+      if (response.status === 401 || response.status === 500) {
+        alert("아이디와 비밀번호를 확인해주세요.");
+      }
       return <div>로그인 중 오류가 발생했습니다.</div>;
     }
 
@@ -56,6 +66,7 @@ export default function Login() {
         <p className={style.title}>GPS System</p>
         <form className={style.form} onSubmit={(e) => e.preventDefault()}>
           <Input
+            ref={ref}
             className={`${style.placeholder} ${style.label} ${style.input}`}
             isRequired
             label="아이디"

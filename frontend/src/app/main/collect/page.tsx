@@ -1,11 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Cookies from "js-cookie";
-import type { CollectHistory } from "@/@types/gps";
-import Table from "@/app/components/table";
 import style from "@collect/page.module.css";
+import type { CollectHistory } from "@/@types/gps";
+import Cookies from "js-cookie";
 import { today } from "@/utils";
+import DateInput from "@/app/components/DateInput";
+import Button from "@/app/components/button";
+import Table from "@/app/components/table";
 
 export default function Page() {
   const [startDate, setStartDate] = useState<string>("");
@@ -23,7 +25,6 @@ export default function Page() {
 
   const fetchData = async (first: string, last: string) => {
     const access_token = Cookies.get("access_token");
-    console.log("access_token", access_token);
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_SERVER_URL}/collect?first=${first}&last=${last}`,
       {
@@ -69,8 +70,6 @@ export default function Page() {
   useEffect(() => {
     setStartDate(today);
     setLastDate(today);
-    // setStartDate(today);
-    // setLastDate(today);
     fetchData(today, today);
   }, []);
 
@@ -80,23 +79,9 @@ export default function Page() {
         <div className={style.title}>위치정보 수집기록</div>
       </div>
       <form onSubmit={onSubmit} className={style.datePicker}>
-        <input
-          className={style.input}
-          type="date"
-          value={startDate}
-          name="start"
-          onChange={selectDates}
-        />
-        <input
-          className={style.input}
-          type="date"
-          value={lastDate}
-          name="last"
-          onChange={selectDates}
-        />
-        <button type="submit" className={style.button}>
-          검색
-        </button>
+        <DateInput name="start" value={startDate} onChange={selectDates} />
+        <DateInput name="last" value={lastDate} onChange={selectDates} />
+        <Button />
       </form>
       <Table datas={collectDatas} />
     </div>
