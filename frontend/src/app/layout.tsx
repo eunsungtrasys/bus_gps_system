@@ -38,7 +38,7 @@ const footerData = [
   },
 ];
 
-export function Footer() {
+function Footer() {
   return (
     <div className={style.container}>
       <div className={style.wrapper}>
