@@ -8,7 +8,7 @@ export default async function Header() {
         <Image
           className={style.image}
           priority
-          src="/gps.trasys_logo.png"
+          src="/gps.trasys_logo.webp"
           alt="logo"
           width={75}
           height={5}
