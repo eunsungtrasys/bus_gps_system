@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import type { CollectHistory } from "@/@types/gps";
 import { today } from "@/utils";
 import Cookies from "js-cookie";
-import DateInput from "@/app/components/DateInput";
+import DateInput from "@/app/components/dateInput";
 import Button from "@/app/components/button";
 import Table from "@/app/components/table";
 

@@ -5,7 +5,7 @@ import style from "@collect/page.module.css";
 import type { AccessHistory } from "@/@types/gps";
 import Cookies from "js-cookie";
 import { today } from "@/utils";
-import DateInput from "@/app/components/DateInput";
+import DateInput from "@/app/components/dateInput";
 import Button from "@/app/components/button";
 import Table from "@/app/components/table";
 
