@@ -28,7 +28,7 @@ const footerData = [
   {
     lines: [
       "대표 : 양국승",
-      "· 개인정보처리관리자 : 양국승",
+      "· 개인정보 보호책임자 : 양국승",
       "· 사업자번호 : 538 - 88 - 01948",
       "· 통신판매업 신고번호 : 2022 - 광주북구 - 0425",
     ],
@@ -36,7 +36,7 @@ const footerData = [
   {
     lines: [
       "사무실 : 62286 광주광역시 광산구 장신로 342 - 19",
-      "Copyright (C) 2024 은성트래시스(주),&ensp;(주)카라멜라 all rights reserved.",
+      "Copyright (C) 2024 은성트래시스(주) all rights reserved.",
     ],
   },
 ];
