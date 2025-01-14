@@ -15,6 +15,10 @@
   gap: 1rem; /* 1rem은 약 16px */
   border-radius: 1rem; /* 1rem은 약 16px */
   padding: 1.5rem 2rem 2.5rem; /* 상단 1.5rem, 좌우 2rem, 하단 2.5rem */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .title {
