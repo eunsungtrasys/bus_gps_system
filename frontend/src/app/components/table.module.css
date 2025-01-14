@@ -1,7 +1,7 @@
 .container {
   display: flex;
   background-color: rgba(255, 255, 255, 1);
-  height: calc(100% - 185px);
+  /* height: calc(100% - 185px); */
   width: 100%;
   padding-left: 20px;
   padding-right: 20px;
@@ -17,11 +17,12 @@
   color: rgba(0, 0, 0, 1);
   font-weight: bold;
   font-size: 20px;
+  margin-bottom: 20px;
 }
 
 .tableContainer {
   /* 테이블 원하는 높이로 설정 */
-  max-height: 800px;
+  max-height: 590px;
   /* 세로 스크롤 활성화 */
   overflow-y: auto;
   border-radius: 5px;
