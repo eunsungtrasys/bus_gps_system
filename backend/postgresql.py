@@ -70,7 +70,7 @@ def delete_old_data(conn):
 def search_access_history_date(conn, first_date:datetime, last_date:datetime):
     sql = 'SELECT ah.access_history_id, u.id AS user_id_in_user_table, ah.ip, ah.access_time, ah.name AS access_name FROM AccessHistory ah JOIN "User" u ON ah.user_id = u.user_id WHERE access_time >= %s AND access_time <= %s ORDER BY access_time DESC'
     cur = conn.cursor()
-    cur.execute(sql, (first_date, last_date))
+    cur.execute(sql, (first_date, last_date+timedelta(days=1)))
     datas = cur.fetchall()
     column_name = ("access_history_id", "user_id", "ip", "access_time", "name")
     column_names_list = []
@@ -87,7 +87,7 @@ def search_access_history_date(conn, first_date:datetime, last_date:datetime):
 def search_coordinate_date(conn, first_date:datetime, last_date:datetime):
     sql = "SELECT * FROM Coordinate WHERE time >= %s AND time <= %s ORDER BY time DESC"
     cur = conn.cursor()
-    cur.execute(sql, (first_date, last_date))
+    cur.execute(sql, (first_date, last_date+timedelta(days=1)))
     datas = cur.fetchall()
     column_name = ("coordinate_id", "gps_id", "x", "y", "time")
     column_names_list = []
@@ -111,7 +111,7 @@ def search_coordinate_date(conn, first_date:datetime, last_date:datetime):
 def search_collect_history_date(conn, first_date:datetime, last_date:datetime):
     sql = "SELECT * FROM CollectHistory WHERE collect_time >= %s AND collect_time <= %s"
     cur = conn.cursor()
-    cur.execute(sql, (first_date, last_date))
+    cur.execute(sql, (first_date, last_date+timedelta(days=1)))
     datas = cur.fetchall()
     column_name = ("collect_history_id", "coordinate_id", "collect_method", "collect_requester", "collect_time")
     column_names_list = []
@@ -128,7 +128,7 @@ def search_collect_history_date(conn, first_date:datetime, last_date:datetime):
 def search_usage_history_date(conn, first_date:datetime, last_date:datetime):
     sql = "SELECT * FROM UsageHistory WHERE usage_time >= %s AND usage_time <= %s"
     cur = conn.cursor()
-    cur.execute(sql, (first_date, last_date))
+    cur.execute(sql, (first_date, last_date+timedelta(days=1)))
     datas = cur.fetchall()
     column_name = ("usage_history_id", "coordinate_id", "collect_method", "recipient", "usage_time")
     column_names_list = []
@@ -176,11 +176,11 @@ if __name__=="__main__" :
                     insert_coordinate(conn, "135648", i[0], i[1], time)
                 print("input complete")
             case "2":
-                search_access_history_date(conn, date.today()-timedelta(weeks=5), date.today()+timedelta(days=1))
+                search_access_history_date(conn, date.today()-timedelta(weeks=5), date.today())
             case "3":
-                search_collect_history_date(conn, date.today()-timedelta(weeks=5), date.today()+timedelta(days=1))
+                search_collect_history_date(conn, date.today()-timedelta(weeks=5), date.today())
             case "4":
-                search_usage_history_date(conn, date.today()-timedelta(weeks=5), date.today()+timedelta(days=1))
+                search_usage_history_date(conn, date.today()-timedelta(weeks=5), date.today())
             case "5":
                 break
     
