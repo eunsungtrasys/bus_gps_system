@@ -2,7 +2,7 @@ from flask import Flask, request, render_template, jsonify
 from markupsafe import escape
 from datetime import datetime, timedelta, date
 import postgresql as db
-from mariadb import *
+# from mariadb import *
 from flask_jwt_extended import *
 from flask_jwt_extended.exceptions import *
 import onetimepass as otp
@@ -212,13 +212,13 @@ def handle_fresh_token_required(e):
         "description": "A fresh token is required to access this resource."
     }), 401
     
-@app.errorhandler(DatabaseError)
-def handle_database_error(e):
-    return jsonify({
-        "code": 500,
-        "name": "Database Error",
-        "description": "An error occurred while accessing the database. Please try again later."
-    }), 500
+# @app.errorhandler(DatabaseError)
+# def handle_database_error(e):
+#     return jsonify({
+#         "code": 500,
+#         "name": "Database Error",
+#         "description": "An error occurred while accessing the database. Please try again later."
+#     }), 500
 
 @app.errorhandler(ValueError)
 def handle_value_error(e):
