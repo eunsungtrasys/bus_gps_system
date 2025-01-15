@@ -1,7 +1,7 @@
 from flask import Flask, request, render_template, jsonify
 from markupsafe import escape
 from datetime import datetime, timedelta, date
-import maria_db as db
+import postgresql as db
 from mariadb import *
 from flask_jwt_extended import *
 from flask_jwt_extended.exceptions import *
