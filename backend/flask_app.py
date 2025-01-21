@@ -1,7 +1,7 @@
+# 라이브러리
 from flask import Flask, request, render_template, jsonify
 from markupsafe import escape
 from datetime import datetime, timedelta, date
-import postgresql as db
 # from mariadb import *
 from flask_jwt_extended import *
 from flask_jwt_extended.exceptions import *
@@ -11,6 +11,8 @@ from flask_restx import Api, Resource, Namespace, fields, reqparse
 from flask_request_validator import *
 from flask_request_validator.exceptions import * 
 from werkzeug.exceptions import *
+
+import postgresql as db
 
 app = Flask(__name__)
 
@@ -32,7 +34,6 @@ api = Api(
     description='API',
     doc='/api'
 )
-
 
 login_ns = api.namespace(name='login', description='ID/PW 1차인증')
 login_input = login_ns.model('login_input', {

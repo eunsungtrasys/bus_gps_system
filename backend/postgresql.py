@@ -84,30 +84,6 @@ def search_access_history_date(conn, first_date:datetime, last_date:datetime):
     print(results)
     return results
 
-def search_coordinate_date(conn, first_date:datetime, last_date:datetime):
-    sql = "SELECT * FROM Coordinate WHERE time >= %s AND time <= %s ORDER BY time DESC"
-    cur = conn.cursor()
-    cur.execute(sql, (first_date, last_date+timedelta(days=1)))
-    datas = cur.fetchall()
-    column_name = ("coordinate_id", "gps_id", "x", "y", "time")
-    column_names_list = []
-    for i in datas:
-        column_names_list.append(column_name)
-    results = []
-    for i,j in zip(tuple(column_names_list), datas):
-        results.append(dict(zip(i, j)))
-    key = b'TKphz5uD2HERhXEY8wRRDg_Eye9TRvfgnAX6z1ja2TA='
-    suite = Fernet(key)
-    if len(results) != 0:
-        for i in results:
-            i['gps_id'] = suite.decrypt(i['gps_id']).decode()
-            i['x'] = suite.decrypt(i['x']).decode()
-            i['y'] = suite.decrypt(i['y']).decode()
-        for i in results:
-            i['time'] = i['time'].strftime("%Y-%m-%d %H:%M:%S")
-    print(results)
-    return results
-
 def search_collect_history_date(conn, first_date:datetime, last_date:datetime):
     sql = "SELECT * FROM CollectHistory WHERE collect_time >= %s AND collect_time <= %s"
     cur = conn.cursor()
